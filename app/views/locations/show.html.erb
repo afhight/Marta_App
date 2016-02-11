@@ -1,0 +1,90 @@
+
+
+<h2>You are Currently Located At...</h2>
+	<p>
+	  <%= @location.my_location %>
+	</p>
+
+<div class="well" class="center-it">
+	
+	<h2>The Closest Buses Are...</h2>
+		<% if @bus_count == 0 %>
+			<p>
+				...not actually that close. Maybe call an Uber.
+			</p>
+		<% end %>
+
+
+
+
+				<% @nearby_buses.each_with_index do |bus, index| %>
+					<div class="panel" class="center-it">
+					<p>
+						<strong>Route</strong>: <%= bus["ROUTE"] %> <%= bus["DIRECTION"] %><br>
+						<strong>Vehicle</strong>: <%= bus["VEHICLE"] %><br>
+						<strong>Next Stop</strong>: <%= bus["TIMEPOINT"] %><br>
+					</p>
+
+					<script>
+
+						$(document).ready(function (){
+
+						  function initialize() {
+
+						  	var myLatLng = new google.maps.LatLng(<%= @location.latitude %>, <%= @location.longitude %>);
+						  	var busLatLng = new google.maps.LatLng(<%= bus["LATITUDE"] %>, <%= bus["LONGITUDE"] %>);
+
+						    var mapOptions = {
+							    center: myLatLng,
+							    zoom: 14,
+							    scrollwheel: false
+						    };
+						      
+						    var map = new google.maps.Map(document.getElementById('map-canvas<%= index %>'), mapOptions);
+
+						    var marker = new google.maps.Marker({
+								  position: busLatLng,
+								  map: map,
+								  title: 'Nearby bus',
+								  animation: google.maps.Animation.BOUNCE
+								});
+
+								var mymarker = new google.maps.Marker({
+								  position: myLatLng,
+								  map: map,
+								  icon: 'http://maps.google.com/mapfiles/ms/icons/green-dot.png',
+								  title: 'My Location',
+								});
+
+								var contentString = "<h4> It's a bus! </h4>";
+
+								var infoWindow = new google.maps.InfoWindow({
+									content: contentString
+								});
+
+								google.maps.event.addListener(marker, 'click', function() {
+						    	infoWindow.open(map,marker);
+						 		});
+						  	
+						  }
+						    
+						  google.maps.event.addDomListener(window, 'load', initialize);
+						});
+
+
+					</script>
+
+
+
+				<div id="map-canvas<%= index %>" class="bus-map"></div>
+			
+</div>
+<% end %>
+	</div>
+
+
+
+	
+
+<button><%= link_to "Actually, I'm at...", edit_location_path(@location) %> </button>
+

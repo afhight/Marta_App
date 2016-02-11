@@ -1,0 +1,69 @@
+/*
+ * This is a manifest file that'll be compiled into application.css, which will include all the files
+ * listed below.
+ *
+ * Any CSS and SCSS file within this directory, lib/assets/stylesheets, vendor/assets/stylesheets,
+ * or any plugin's vendor/assets/stylesheets directory can be referenced here using a relative path.
+ *
+ * You're free to add application-wide styles to this file and they'll appear at the bottom of the
+ * compiled file so the styles you add here take precedence over styles defined in any styles
+ * defined in the other CSS/SCSS files in this directory. It is generally better to create a new
+ * file per style scope.
+ *
+ *= require_tree .
+ *= require_self
+ */
+
+
+@import 'bootstrap-sprockets';
+@import 'bootstrap';
+@import 'font-awesome';
+
+body {
+	background: url(<%= asset_path "bg.jpeg" %>) no-repeat center center fixed;
+	background-size: cover;
+}
+
+.container {
+	background: rgba(255,255,255,0.7);
+	padding: 10px;
+	border-radius: 15px;
+}
+
+.well {
+	padding: 10px;
+	background: rgba(255,255,255,0.5);
+	border-radius: 15px;
+}
+
+.show-page {
+	padding-bottom: 20px;
+}
+
+/*#map-canvas{
+	width:250px;
+	height: 250px;
+	border-radius: 15px;
+	margin-bottom: 15px;
+}*/
+
+.bus-map {
+	width: 350px;
+	height: 250px;
+	border-radius: 15px;
+	margin-bottom: 15px;
+	margin-left: 10px;
+	vertical-align: center;
+}
+
+.panel {
+	width:400px;
+	border-radius: 15px;
+	padding: 10px;
+	background-color: rgba(201, 171, 156, 0.6);
+	vertical-align: center;
+}
+
+.center-it {
+	text-align: center;
+}
