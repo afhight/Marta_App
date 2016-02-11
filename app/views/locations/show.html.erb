@@ -1,11 +1,9 @@
-
-
 <h2>You are Currently Located At...</h2>
 	<p>
 	  <%= @location.my_location %>
 	</p>
 
-<div class="well" class="center-it">
+<div class="well">
 	
 	<h2>The Closest Buses Are...</h2>
 		<% if @bus_count == 0 %>
@@ -14,77 +12,73 @@
 			</p>
 		<% end %>
 
+	<% @nearby_buses.each_with_index do |bus, index| %>
+		<div class="row">
 
+		<div class="col-md-6 col-md-offset-3">
+			<div class="panel">
+				<p>
+					<strong>Route</strong>: <%= bus["ROUTE"] %> <%= bus["DIRECTION"] %><br>
+					<strong>Vehicle</strong>: <%= bus["VEHICLE"] %><br>
+					<strong>Next Stop</strong>: <%= bus["TIMEPOINT"] %><br>
+				</p>
 
+				<script>
 
-				<% @nearby_buses.each_with_index do |bus, index| %>
-					<div class="panel" class="center-it">
-					<p>
-						<strong>Route</strong>: <%= bus["ROUTE"] %> <%= bus["DIRECTION"] %><br>
-						<strong>Vehicle</strong>: <%= bus["VEHICLE"] %><br>
-						<strong>Next Stop</strong>: <%= bus["TIMEPOINT"] %><br>
-					</p>
+					$(document).ready(function (){
 
-					<script>
+					  function initialize() {
 
-						$(document).ready(function (){
+					  	var myLatLng = new google.maps.LatLng(<%= @location.latitude %>, <%= @location.longitude %>);
+					  	var busLatLng = new google.maps.LatLng(<%= bus["LATITUDE"] %>, <%= bus["LONGITUDE"] %>);
 
-						  function initialize() {
+					    var mapOptions = {
+						    center: myLatLng,
+						    zoom: 14,
+						    scrollwheel: false
+					    };
+					      
+					    var map = new google.maps.Map(document.getElementById('map-canvas<%= index %>'), mapOptions);
 
-						  	var myLatLng = new google.maps.LatLng(<%= @location.latitude %>, <%= @location.longitude %>);
-						  	var busLatLng = new google.maps.LatLng(<%= bus["LATITUDE"] %>, <%= bus["LONGITUDE"] %>);
+					    var marker = new google.maps.Marker({
+							  position: busLatLng,
+							  map: map,
+							  title: 'Nearby bus',
+							  animation: google.maps.Animation.BOUNCE
+							});
 
-						    var mapOptions = {
-							    center: myLatLng,
-							    zoom: 14,
-							    scrollwheel: false
-						    };
-						      
-						    var map = new google.maps.Map(document.getElementById('map-canvas<%= index %>'), mapOptions);
+							var mymarker = new google.maps.Marker({
+							  position: myLatLng,
+							  map: map,
+							  icon: 'http://maps.google.com/mapfiles/ms/icons/green-dot.png',
+							  title: 'My Location',
+							});
 
-						    var marker = new google.maps.Marker({
-								  position: busLatLng,
-								  map: map,
-								  title: 'Nearby bus',
-								  animation: google.maps.Animation.BOUNCE
-								});
+							var contentString = "<h4> It's a bus! </h4>";
 
-								var mymarker = new google.maps.Marker({
-								  position: myLatLng,
-								  map: map,
-								  icon: 'http://maps.google.com/mapfiles/ms/icons/green-dot.png',
-								  title: 'My Location',
-								});
+							var infoWindow = new google.maps.InfoWindow({
+								content: contentString
+							});
 
-								var contentString = "<h4> It's a bus! </h4>";
+							google.maps.event.addListener(marker, 'click', function() {
+					    	infoWindow.open(map,marker);
+					 		});
+					  	
+					  }
+					    
+					  google.maps.event.addDomListener(window, 'load', initialize);
+					});
 
-								var infoWindow = new google.maps.InfoWindow({
-									content: contentString
-								});
-
-								google.maps.event.addListener(marker, 'click', function() {
-						    	infoWindow.open(map,marker);
-						 		});
-						  	
-						  }
-						    
-						  google.maps.event.addDomListener(window, 'load', initialize);
-						});
-
-
-					</script>
-
-
+				</script>
 
 				<div id="map-canvas<%= index %>" class="bus-map"></div>
-			
-</div>
-<% end %>
+			</div>
+		</div>
 	</div>
-
+	<% end %>
 
 
 	
-
-<button><%= link_to "Actually, I'm at...", edit_location_path(@location) %> </button>
-
+<div class="center-it">
+<button class="btn btn-warning"><%= link_to "Actually, I'm at...", edit_location_path(@location) %> </button>
+</div>
